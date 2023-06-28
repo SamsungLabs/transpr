@@ -1,0 +1,28 @@
+data_root: 'downloads'
+
+datasets: 
+    shirt:
+        scene_path: shirt/scene.yaml
+        target_name_func: "lambda i: f'{i}.png'"
+        target_path: shirt/masked    
+    
+    jewelry_smoke:
+        scene_path: jewelry/scene_smoke.yaml
+        target_name_func: "lambda i: f'{i}.png'"
+        target_path: jewelry/masked
+
+    jewelry_masked:
+      scene_path: jewelry/scene.yaml
+      target_path: jewelry/masked
+      target_name_func: "lambda i: f'{i}.png'"
+    
+    static_smoke:
+      scene_path: static_smoke/scene_ds.yaml
+      target_path: static_smoke/images
+      target_name_func: "lambda i: f'{i}.png'"
+    
+    aquarium:
+      scene_path: aquarium/scene.yaml
+      target_path: aquarium/images
+      target_name_func: "lambda i: f'{i:04}.png'"
+    

@@ -1,0 +1,73 @@
+paths_file: configs/paths.yaml 
+
+dataset_names:  [jewelry_masked, static_smoke]
+
+additional_fields: [] 
+crop_size: 512x512
+freeze_textures: []
+random_background: True
+
+batch_size: 8
+eval_in_train_epoch: 2
+max_ds: 4
+conv_block: 'gated'
+
+max_ray_length: 25
+descriptor_size: 8
+num_mipmap: 5
+num_output_channels: 4
+
+texture_module: npbg.models.ray_texture.PointTexture
+texture_args:
+    init_method: alpha_const
+    alpha_init_scale: 0.5
+    reg_weight: 0
+
+lr: 1e-4
+texture_lr: 1e-2
+
+
+log_freq_hist: 10
+log_freq_images: 5
+
+epochs: 100
+save_freq: 25
+save_dir: dumps
+eval_in_train: True
+
+
+splitter_module: npbg.datasets.splitter.split_by_ratio
+splitter_args:
+    train_ratio: 0.95
+    
+
+pipeline_model_module: npbg.models.ray_texture_unet.RayTexture
+
+ray_block_module: npbg.models.raymarching.raymarcher.Raymarcher
+ray_block_args: 
+    use_alpha: True
+
+train_dataset_args:
+    keep_fov: False
+    random_zoom: [0.5, 2.0]
+    random_shift: [-1., 1.]
+    num_samples: 500
+    alpha_jitter: False
+    random_overlay: True
+    
+
+val_dataset_args:
+    keep_fov: False
+    num_samples: 32
+    alpha_jitter: False
+
+renderer_module: npbg.models.projection.renderer.Renderer
+projector_module: npbg.models.projection.projector.ProjectVertices
+renderer_args: {}
+    
+grid_sampler_module: npbg.models.raymarching.forward_sampler.ForwardSamplerMultiscale3d
+grid_sampler_args: {}
+
+criterion_module: npbg.criterions.vgg_l1.VGGL1Alpha 
+criterion_args: 
+    l1_weight: 0

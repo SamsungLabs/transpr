@@ -1,0 +1,16 @@
+# required
+texture_ckpt: <path to texture weights (.pth file)>
+net_ckpt: <path to Unet weights (.pth file)>
+
+dataset_name: <dataset name from paths.yaml>
+
+image_size: <[pix_width, pix_height]>
+view_matrix: <either xml from agisoft or stacked OpenGL matrices in a txt file>
+
+# optinal
+max_ray_length: <maximum ray length, the default one is used from corresponding to a checkpoint train config>
+
+# if trained with alpha (explicit or semi-supervised), requires train images to have alpha channel
+random_background: <True/False>
+background: <path to background images folder>
+background_name_func: <a constant or frame-wise backgound images (see configs)>

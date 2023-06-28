@@ -1,0 +1,11 @@
+texture_ckpt: downloads/aquarium/weights/PointTexture_stage_0_epoch_14_aquarium.pth
+net_ckpt: downloads/aquarium/weights/UNet_stage_0_epoch_14_net.pth
+
+dataset_name: aquarium 
+image_size: [512, 512] 
+view_matrix: downloads/aquarium/traj_fly.txt
+max_ray_length: 100
+
+# random_background: True
+# background: downloads/bck
+# background_name_func: "lambda i: '01 - September 2020 (myphotopack.com).jpg'"

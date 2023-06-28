@@ -1,0 +1,11 @@
+texture_ckpt: downloads/shirt/weights/PointTexture_stage_0_epoch_59_shirt.pth
+net_ckpt: downloads/shirt/weights/UNet_stage_0_epoch_59_net.pth
+
+dataset_name: shirt
+image_size: [1024, 1920]
+view_matrix: downloads/shirt/traj_360.txt
+
+background: downloads/bck
+background_name_func: "lambda i: '01 - September 2020 (myphotopack.com).jpg'"
+
+alpha_jitter: 0.7

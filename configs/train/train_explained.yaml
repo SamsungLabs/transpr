@@ -1,0 +1,95 @@
+paths_file: <configs/paths.yaml> 
+dataset_names:  <dataset names from paths.yaml> 
+additional_fields: <fill empty list or load ['rgb'] for debug or visualization purposes>
+crop_size: <{crop_width}x{crop_hight}>
+freeze_textures: <fill empty or freeze textures for particular dataset names>
+
+# if True requires train images to contain alpha channel: either binary (0, 255) or alpha values for semi-transparent objects, e.g. smoke
+# must be in accordance with num_output_channels
+random_background: <True/False>
+
+
+batch_size: <adjust to your computational capabilities>
+eval_in_train_epoch: <epoch frequency for evaluation mode for rendering network>
+
+# e.g. len(dataset_names)=10, while only {max_ds} datasets will be loaded into memory simultaneously
+max_ds: <maximum datasets loaded into memory for a single epoch>
+conv_block: <keep 'gated', no improvement observed using 'partial'>
+
+max_ray_length: <adjust to your semi-transparent objects point cloud densities>
+descriptor_size: <actually, desctiptor_size + 1 for alpha>
+num_mipmap: <number of images in the pyramid of resolutions - from 1: [full_res] to 5: [full_res, full_res//2, full_res//4, full_res//8, full_res//16]>
+
+# must be in accordance with random_background
+num_output_channels: <3 in case no alpha, otherwise 4>
+
+
+texture_module: <npbg.models.ray_texture.PointTexture or your custom one in case you extend the pipeline>
+texture_args:
+    init_method: <alpha_const (alpha_init_scale), zeros, ones, we used alpha_const>
+    alpha_init_scale: <0-1.0>
+    reg_weight: <regularization weight for texture, didn't use in the current pipeline>
+    # must be in accordance with alpha_jitter
+    density_scale: <the staring point for density scale if using alpha_jitter augmentation>
+
+lr: <unet learning rate>
+texture_lr: <texture learning rate>
+
+
+log_freq_images: <frequency (in iterations) of images logged into tensorboard>
+
+epochs: <number of epoches, adject to the complexity of scenes>
+save_freq: <save frequency in epochs>
+save_dir: <save directory>
+eval_in_train: <True/False, whether use eval mode for rendering network during train>
+
+
+splitter_module: <npbg.datasets.splitter.split_by_ratio or a custom one>
+splitter_args:
+    train_ratio: <train data from 0-1.0>
+    
+
+pipeline_model_module: <npbg.models.ray_texture_unet.RayTexture or a custom one>
+
+ray_block_module: <npbg.models.raymarching.raymarcher.Raymarcher  or a custom one>
+# alpha processing
+ray_block_args: 
+    sigmoid: <False, no improvement observed>
+    clamp: <False, no improvement observed>
+    use_alpha: <True - concatenate rasterized alpha with descriptor values>
+
+
+
+train_dataset_args:
+    keep_fov: <False>
+    random_zoom: <[0.5, 2.0], is quite maximum, broader range is rather extreme>
+    random_shift: <[-1., 1.] is maximum>
+    # if using random_zoom and random_shift will generate num_samples random samples per epoch
+    num_samples: <adjust number of samples in case your train images are sparse>
+    
+    # must be in accordance with density_scale in texture_args
+    # use if planning to manipulate alpha afterwards>
+    alpha_jitter: <True/False>
+    min_alpha: <0.5 should work, lower values are rather extreme>
+    max_alpha: <1.0 is maximum>
+    
+    # use if planning scene editing
+    random_overlay: <True/False>
+
+val_dataset_args:
+    keep_fov: <False>
+    num_samples: <make sure number of validation samples exceeds batch_size
+    alpha_jitter: <True whether you want to observe alpha manipulations on validation data>
+    min_alpha: <0.01-0.99>
+    max_alpha: <0.01-1.0>
+
+renderer_module: <npbg.models.projection.renderer.Renderer or custom one>
+projector_module: <npbg.models.projection.projector.ProjectVertices or custom one>
+renderer_args: {}
+    
+grid_sampler_module: <npbg.models.raymarching.forward_sampler.ForwardSamplerMultiscale3d or custom one>
+grid_sampler_args: {}
+
+criterion_module: <npbg.criterions.vgg_l1.VGGL1Alpha or custom one>
+criterion_args: 
+    l1_weight: <0 in semi-supervised pipeline, otherwise ~400 to balance VGG loss range>

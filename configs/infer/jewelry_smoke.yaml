@@ -1,0 +1,9 @@
+texture_ckpt: downloads/jewelry/weights/PointTexture_stage_0_epoch_99_fused.pth
+net_ckpt: downloads/jewelry/weights/UNet_stage_0_epoch_99_net.pth
+
+dataset_name: jewelry_smoke
+image_size: [1024, 1024]
+view_matrix: downloads/jewelry/traj_fly_jewelry.txt
+
+background: downloads/bck
+background_name_func: "lambda i: '01 - September 2020 (myphotopack.com).jpg'"
